@@ -42,43 +42,33 @@ class Calcul {
         elementsToDisplay.append(numberSelected)
     }
     
-    func addAPlus() -> ErrorType? {
+    func addAPlus() {
         if canAddOperator {
             elementsToDisplay.append(" + ")
-            return nil
         } else {
-            return .operandAlreadyChoosed
-            /*let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alertVC, animated: true, completion: nil)*/
+            errorDone(.operandAlreadyChoosed)
         }
     }
     
-    func addAMinus() -> ErrorType? {
+    func addAMinus() {
         if canAddOperator {
             elementsToDisplay.append(" - ")
-            return nil
+            return
         } else {
-            return .operandAlreadyChoosed
-            /*let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alertVC, animated: true, completion: nil)*/
+            errorDone(.operandAlreadyChoosed)
+            return
         }
     }
 
-    func calculate() -> ErrorType? {
+    func calculate() {
         guard expressionIsCorrect else {
-            return .expressionNotCorrect
-            /*let alertVC = UIAlertController(title: "Zéro!", message: "Entrez une expression correcte !", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            return self.present(alertVC, animated: true, completion: nil)*/
+            errorDone(.expressionNotCorrect)
+            return
         }
         
         guard expressionHaveEnoughElement else {
-            return .expressionNotCorrect
-            /*let alertVC = UIAlertController(title: "Zéro!", message: "Démarrez un nouveau calcul !", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            return self.present(alertVC, animated: true, completion: nil)*/
+            errorDone(.expressionNotEnoughtLong)
+            return
         }
         
         // Create local copy of operations
@@ -101,10 +91,26 @@ class Calcul {
             operationsToReduce.insert("\(result)", at: 0)
         }
         elementsToDisplay.append(" = \(operationsToReduce.first!)")
-        return nil
     }
     
     enum ErrorType {
         case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong
     }
+    
+    func errorDone(_ errorType: ErrorType) {
+        var errorName: String = ""
+        switch errorType {
+        case .expressionNotCorrect:
+            errorName = "expressionNotCorrect"
+        case .expressionNotEnoughtLong:
+            errorName = "expressionNotEnoughtLong"
+        case .operandAlreadyChoosed:
+            errorName = "operandAlreadyChoosed"
+        }
+        let errorNotificationName = Notification.Name(errorName)
+        let errorNotification = Notification(name: errorNotificationName)
+        NotificationCenter.default.post(errorNotification)
+    }
+    
+    
 }
