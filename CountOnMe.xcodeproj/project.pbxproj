@@ -80,8 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				1FA43BD1224E569900F565CB /* CountOnMe */,
-				1FA43BE6224E569A00F565CB /* CountOnMeTests */,
-				1FA43BF1224E569A00F565CB /* CountOnMeUITests */,
+				1FA43BE6224E569A00F565CB /* SimpleCalcTests */,
+				1FA43BF1224E569A00F565CB /* SimpleCalcUITests */,
 				1FA43BD0224E569900F565CB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,22 +108,22 @@
 			path = CountOnMe;
 			sourceTree = "<group>";
 		};
-		1FA43BE6224E569A00F565CB /* CountOnMeTests */ = {
+		1FA43BE6224E569A00F565CB /* SimpleCalcTests */ = {
 			isa = PBXGroup;
 			children = (
 				1FA43BE7224E569A00F565CB /* SimpleCalcTests.swift */,
 				1FA43BE9224E569A00F565CB /* Info.plist */,
 			);
-			path = CountOnMeTests;
+			path = SimpleCalcTests;
 			sourceTree = "<group>";
 		};
-		1FA43BF1224E569A00F565CB /* CountOnMeUITests */ = {
+		1FA43BF1224E569A00F565CB /* SimpleCalcUITests */ = {
 			isa = PBXGroup;
 			children = (
 				1FA43BF2224E569A00F565CB /* SimpleCalcUITests.swift */,
 				1FA43BF4224E569A00F565CB /* Info.plist */,
 			);
-			path = CountOnMeUITests;
+			path = SimpleCalcUITests;
 			sourceTree = "<group>";
 		};
 		7C3E3F0D265E9C58005EB722 /* Model */ = {

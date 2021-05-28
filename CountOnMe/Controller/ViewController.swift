@@ -12,26 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
     @IBOutlet var numberButtons: [UIButton]!
     
-    var elements: [String] {
-        return textView.text.split(separator: " ").map { "\($0)" }
-    }
-    
-    // Error check computed variables
-    var expressionIsCorrect: Bool {
-        return elements.last != "+" && elements.last != "-"
-    }
-    
-    var expressionHaveEnoughElement: Bool {
-        return elements.count >= 3
-    }
-    
-    var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-"
-    }
-    
-    var expressionHaveResult: Bool {
-        return textView.text.firstIndex(of: "=") != nil
-    }
+    let calcul = Calcul()
     
     // View Life cycles
     override func viewDidLoad() {
@@ -45,36 +26,57 @@ class ViewController: UIViewController {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
+        calcul.addANumber(numberText)
+        textView.text = calcul.elementsToDisplay
+        
+        /*guard let numberText = sender.title(for: .normal) else {
+            return
+        }
         
         if expressionHaveResult {
             textView.text = ""
         }
         
-        textView.text.append(numberText)
+        textView.text.append(numberText)*/
     }
     
     @IBAction func tappedAdditionButton(_ sender: UIButton) {
-        if canAddOperator {
+        guard calcul.addAPlus() == nil else {
+            showError(messageChoice: .operandAlreadyChoosed)
+            return
+        }
+        textView.text = calcul.elementsToDisplay
+        /*if canAddOperator {
             textView.text.append(" + ")
         } else {
             let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
             alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
             self.present(alertVC, animated: true, completion: nil)
-        }
+        }*/
     }
     
     @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-        if canAddOperator {
+        guard calcul.addAMinus() == nil else {
+            showError(messageChoice: .operandAlreadyChoosed)
+            return
+        }
+        textView.text = calcul.elementsToDisplay
+        /*if canAddOperator {
             textView.text.append(" - ")
         } else {
             let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
             alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
             self.present(alertVC, animated: true, completion: nil)
-        }
+        }*/
     }
 
     @IBAction func tappedEqualButton(_ sender: UIButton) {
-        guard expressionIsCorrect else {
+        guard calcul.calculate() == nil else {
+            showError(messageChoice: .expressionNotCorrect)
+            return
+        }
+        textView.text = calcul.elementsToDisplay
+        /*guard expressionIsCorrect else {
             let alertVC = UIAlertController(title: "Zéro!", message: "Entrez une expression correcte !", preferredStyle: .alert)
             alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
             return self.present(alertVC, animated: true, completion: nil)
@@ -105,7 +107,29 @@ class ViewController: UIViewController {
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
             operationsToReduce.insert("\(result)", at: 0)
         }
-        textView.text.append(" = \(operationsToReduce.first!)")
+        textView.text.append(" = \(operationsToReduce.first!)")*/
+    }
+    
+    enum MessageType {
+        case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong
+    }
+    
+    private func showError(messageChoice: MessageType) {
+        
+        let message: String?
+        
+        switch messageChoice {
+        case .operandAlreadyChoosed:
+            message = "Un operateur est déja mis !"
+        case .expressionNotCorrect:
+            message = "Entrez une expression correcte !"
+        case .expressionNotEnoughtLong:
+            message = "Démarrez un nouveau calcul !"
+        }
+        
+        let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        return self.present(alertVC, animated: true, completion: nil)
     }
 
 }
