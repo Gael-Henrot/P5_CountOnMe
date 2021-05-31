@@ -16,9 +16,9 @@ class Calcul {
         return elementsToDisplay.split(separator: " ").map { "\($0)" }
     }
     
-    // Error check computed variables
+    //MARK:  Error check computed variables
     private var expressionIsCorrect: Bool {
-        return elements.last != "+" && elements.last != "-"
+        return elements.last != "+" && elements.last != "-" && elements.last != "*"
     }
     
     private var expressionHaveEnoughElement: Bool {
@@ -26,12 +26,18 @@ class Calcul {
     }
     
     private var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-"
+        return elements.last != "+" && elements.last != "-" && elements.last != "*"
     }
     
     private var expressionHaveResult: Bool {
         return elementsToDisplay.firstIndex(of: "=") != nil
     }
+    
+    private var expressionHaveAMultiply: Bool {
+        return elementsToDisplay.firstIndex(of: "x") != nil
+    }
+    
+    // MARK: Add something to the calculation methods
     
     func addANumber(_ numberSelected: String) {
         
@@ -53,14 +59,25 @@ class Calcul {
     func addAMinus() {
         if canAddOperator {
             elementsToDisplay.append(" - ")
-            return
         } else {
             errorDone(.operandAlreadyChoosed)
-            return
         }
     }
-
+    
+    func addAMultiply() {
+        if canAddOperator {
+            elementsToDisplay.append(" x ")
+        } else {
+            errorDone(.operandAlreadyChoosed)
+        }
+    }
+    
     func calculate() {
+        guard expressionHaveResult == false else {
+            errorDone(.expressionNotCorrect)
+            return
+        }
+        
         guard expressionIsCorrect else {
             errorDone(.expressionNotCorrect)
             return
@@ -76,19 +93,29 @@ class Calcul {
         
         // Iterate over operations while an operand still here
         while operationsToReduce.count > 1 {
-            let left = Int(operationsToReduce[0])!
-            let operand = operationsToReduce[1]
-            let right = Int(operationsToReduce[2])!
+            var i = 1
+            
+            if expressionHaveAMultiply {
+                i = (operationsToReduce.firstIndex(of: "x") ?? 1)
+            }
+            
+            let rangeToRemove = i-1...i+1
+            let left = Int(operationsToReduce[i-1])!
+            let operand = operationsToReduce[i]
+            let right = Int(operationsToReduce[i+1])!
             
             let result: Int
             switch operand {
             case "+": result = left + right
             case "-": result = left - right
+            case "x": result = left * right
+            case "=": result = left
             default: fatalError("Unknown operator !")
             }
-            
-            operationsToReduce = Array(operationsToReduce.dropFirst(3))
-            operationsToReduce.insert("\(result)", at: 0)
+            operationsToReduce.removeSubrange(rangeToRemove)
+            operationsToReduce.insert("\(result)", at: i-1)
+//            operationsToReduce = Array(operationsToReduce.dropFirst(3))
+//            operationsToReduce.insert("\(result)", at: 0)
         }
         elementsToDisplay.append(" = \(operationsToReduce.first!)")
     }

@@ -217,6 +217,9 @@
                                                 <state key="normal" title="x">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="tappedMultiplyButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="XYr-B2-3fj"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gwd-3f-4VR" userLabel="/">
                                                 <rect key="frame" x="89.999999999999986" y="0.0" width="75.000000000000014" height="75"/>

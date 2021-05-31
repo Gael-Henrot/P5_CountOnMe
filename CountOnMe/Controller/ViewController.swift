@@ -58,6 +58,11 @@ class ViewController: UIViewController {
         display()
     }
     
+    @IBAction func tappedMultiplyButton(_ sender: UIButton) {
+        calcul.addAMultiply()
+        display()
+    }
+    
     ///This method shows an alert when an expression is not correct (expression ends with an operand).
     @objc private func showErrorExpressionNotCorrect() {
         let alertVC = UIAlertController(title: "Zéro!", message: "Entrez une expression correcte !", preferredStyle: .alert)
