@@ -18,7 +18,7 @@ class Calcul {
     
     //MARK:  Error check computed variables
     private var expressionIsCorrect: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "*"
+        return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
     }
     
     private var expressionHaveEnoughElement: Bool {
@@ -26,7 +26,7 @@ class Calcul {
     }
     
     private var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "*"
+        return elements.last != "+" && elements.last != "-" && elements.last != "*" && elements.last != "/"
     }
     
     private var expressionHaveResult: Bool {
@@ -37,12 +37,21 @@ class Calcul {
         return elementsToDisplay.firstIndex(of: "x") != nil
     }
     
+    private var expressionHaveADivide: Bool {
+        return elementsToDisplay.firstIndex(of: "/") != nil
+    }
+    
     // MARK: Add something to the calculation methods
     
     func addANumber(_ numberSelected: String) {
         
         if expressionHaveResult {
             elementsToDisplay = ""
+        }
+        
+        guard !(elementsToDisplay.contains(" / ") && numberSelected == "0") else {
+            errorDone(.divideByZero)
+            return
         }
         
         elementsToDisplay.append(numberSelected)
@@ -67,6 +76,14 @@ class Calcul {
     func addAMultiply() {
         if canAddOperator {
             elementsToDisplay.append(" x ")
+        } else {
+            errorDone(.operandAlreadyChoosed)
+        }
+    }
+    
+    func addADivide() {
+        if canAddOperator {
+            elementsToDisplay.append(" / ")
         } else {
             errorDone(.operandAlreadyChoosed)
         }
@@ -98,17 +115,21 @@ class Calcul {
             if expressionHaveAMultiply {
                 i = (operationsToReduce.firstIndex(of: "x") ?? 1)
             }
+            if expressionHaveADivide {
+                i = (operationsToReduce.firstIndex(of: "/") ?? 1)
+            }
             
             let rangeToRemove = i-1...i+1
-            let left = Int(operationsToReduce[i-1])!
+            let left = Double(operationsToReduce[i-1])!
             let operand = operationsToReduce[i]
-            let right = Int(operationsToReduce[i+1])!
+            let right = Double(operationsToReduce[i+1])!
             
-            let result: Int
+            let result: Double
             switch operand {
             case "+": result = left + right
             case "-": result = left - right
             case "x": result = left * right
+            case "/": result = left / right
             case "=": result = left
             default: fatalError("Unknown operator !")
             }
@@ -121,7 +142,7 @@ class Calcul {
     }
     
     enum ErrorType {
-        case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong
+        case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong, divideByZero
     }
     
     func errorDone(_ errorType: ErrorType) {
@@ -133,6 +154,8 @@ class Calcul {
             errorName = "expressionNotEnoughtLong"
         case .operandAlreadyChoosed:
             errorName = "operandAlreadyChoosed"
+        case .divideByZero:
+            errorName = "divideByZero"
         }
         let errorNotificationName = Notification.Name(errorName)
         let errorNotification = Notification(name: errorNotificationName)

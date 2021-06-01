@@ -21,10 +21,12 @@ class ViewController: UIViewController {
         // Notifications for errors
         let errorExpressionNotCorrectName = Notification.Name("expressionNotCorrect")
         NotificationCenter.default.addObserver(self, selector: #selector(showErrorExpressionNotCorrect), name: errorExpressionNotCorrectName, object: nil)
-        let errorexpressionNotEnoughtLongName = Notification.Name("expressionNotEnoughtLong")
-        NotificationCenter.default.addObserver(self, selector: #selector(showErrorExpressionNotEnoughtLong), name: errorexpressionNotEnoughtLongName, object: nil)
+        let errorExpressionNotEnoughtLongName = Notification.Name("expressionNotEnoughtLong")
+        NotificationCenter.default.addObserver(self, selector: #selector(showErrorExpressionNotEnoughtLong), name: errorExpressionNotEnoughtLongName, object: nil)
         let errorOperandAlreadyChoosedName = Notification.Name("operandAlreadyChoosed")
         NotificationCenter.default.addObserver(self, selector: #selector(showErrorOperandAlreadyChoosed), name: errorOperandAlreadyChoosedName, object: nil)
+        let errorDivideByZeroName = Notification.Name("divideByZero")
+        NotificationCenter.default.addObserver(self, selector: #selector(showErrorDivideByZero), name: errorDivideByZeroName, object: nil)
     }
     
     ///This method displays the elements of calculation in the textView.
@@ -63,6 +65,11 @@ class ViewController: UIViewController {
         display()
     }
     
+    @IBAction func tappedDivideButton(_ sender: UIButton) {
+        calcul.addADivide()
+        display()
+    }
+    
     ///This method shows an alert when an expression is not correct (expression ends with an operand).
     @objc private func showErrorExpressionNotCorrect() {
         let alertVC = UIAlertController(title: "Zéro!", message: "Entrez une expression correcte !", preferredStyle: .alert)
@@ -80,6 +87,13 @@ class ViewController: UIViewController {
     ///This method shows an alert when an operand is already choosed.
     @objc private func showErrorOperandAlreadyChoosed() {
         let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alertVC, animated: true, completion: nil)
+    }
+    
+    ///This method shows an alert when the user try to divide by 0.
+    @objc private func showErrorDivideByZero() {
+        let alertVC = UIAlertController(title: "Zéro!", message: "Division par zéro impossible !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alertVC, animated: true, completion: nil)
     }
