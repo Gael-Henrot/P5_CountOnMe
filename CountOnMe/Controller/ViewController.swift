@@ -30,7 +30,7 @@ class ViewController: UIViewController {
     }
     
     ///This method displays the elements of calculation in the textView.
-    ///It used each time a number or an operand is added to the calculation.
+    ///It is used each time a number or an operand is added to the calculation.
     private func display() {
         textView.text = calcul.elementsToDisplay
     }
@@ -70,23 +70,28 @@ class ViewController: UIViewController {
         display()
     }
     
+    @IBAction func tappedEraseButton (_sender: UIButton) {
+        calcul.delete()
+        display()
+    }
+    
     ///This method shows an alert when an expression is not correct (expression ends with an operand).
     @objc private func showErrorExpressionNotCorrect() {
-        let alertVC = UIAlertController(title: "Zéro!", message: "Entrez une expression correcte !", preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Nope!", message: "Entrez une expression correcte !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alertVC, animated: true, completion: nil)
     }
 
     ///This method shows an alert when an expression is not long enought (3 elements minimum).
     @objc private func showErrorExpressionNotEnoughtLong() {
-        let alertVC = UIAlertController(title: "Zéro!", message: "Démarrez un nouveau calcul !", preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Allez!", message: "Démarrez un nouveau calcul !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alertVC, animated: true, completion: nil)
     }
     
     ///This method shows an alert when an operand is already choosed.
     @objc private func showErrorOperandAlreadyChoosed() {
-        let alertVC = UIAlertController(title: "Zéro!", message: "Un operateur est déja mis !", preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Nope!", message: "Un operateur est déjà mis !", preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alertVC, animated: true, completion: nil)
     }
