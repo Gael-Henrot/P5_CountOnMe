@@ -12,11 +12,13 @@ class Calcul {
     
     var elementsToDisplay: String = ""
     
-    var elements: [String] {
+    private var elements: [String] {
         return elementsToDisplay.split(separator: " ").map { "\($0)" }
     }
     
-    //MARK:  Error check computed variables
+    private var numbers: [String] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    
+    //MARK:  Error check computed variables and methods
     private var expressionIsCorrect: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "x" && elements.last != "/"
     }
@@ -45,6 +47,38 @@ class Calcul {
         return elementsToDisplay != ""
     }
     
+    /// This method verifies if a point can be added (have not a result, the last number does not already have a point
+    private func canAddAPoint() -> Bool {
+        var isANumber = false
+        guard !expressionHaveResult else {
+            return false
+        }
+        guard !hasAlreadyAPoint() else {
+            return false
+        }
+        
+        // Checks if the last element is a number.
+        let last = elementsToDisplay.suffix(1)
+        for i in numbers {
+            if last == i {
+                isANumber = true
+            }
+        }
+        return isANumber
+    }
+    
+    /// This method checks if the last number has already a point.
+    private func hasAlreadyAPoint() -> Bool {
+        guard let lastElement = elements.last else {
+            return false
+        }
+        if lastElement.contains(".") {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     // MARK: 'Add something to the calculation' methods
     
     /// This method adds a number to the current calculation. It forbids the user to divide by 0.
@@ -55,9 +89,9 @@ class Calcul {
             elementsToDisplay = ""
         }
         
-        // Forbids the user to divide by 0.
+        // If the user chooses a 0 after a divide, a point will be automatically added.
         guard !(elementsToDisplay.hasSuffix("/ ") && numberSelected == "0") else {
-            errorDone(.divideByZero)
+            elementsToDisplay.append("0.")
             return
         }
         
@@ -96,6 +130,15 @@ class Calcul {
     /// This method adds a divide sign to the current calculation.
     func addADivide() {
         addAnOperator(operatorAsString: "/")
+    }
+    
+    /// This method add a point (decimal).
+    func addAPoint() {
+       guard canAddAPoint() == true else {
+            errorDone(.expressionNotCorrect)
+            return
+        }
+            elementsToDisplay.append(".")
     }
     
     // MARK: 'Modify the calculation' methods
@@ -175,12 +218,17 @@ class Calcul {
             
             var result: Double
             
-            //Realizes the calculation according to the operator.
+            // Realizes the calculation according to the operator.
             switch operand {
             case "+": result = left + right
             case "-": result = left - right
             case "x": result = left * right
             case "/": result = left / right
+                // Forbids the user ti divide by 0.
+                guard right != 0 else {
+                    errorDone(.divideByZero)
+                    return
+                }
             default: fatalError("Unknown operator !")
             }
             // Removes the calculation just done and put the result.

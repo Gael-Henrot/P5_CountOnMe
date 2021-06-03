@@ -31,8 +31,13 @@ class ViewController: UIViewController {
     
     ///This method displays the elements of calculation in the textView.
     ///It is used each time a number or an operand is added to the calculation.
+    ///It also scrolls to the bottom if the calculation is too long.
     private func display() {
         textView.text = calcul.elementsToDisplay
+        
+        // Scrolls to the bottom
+        let range = NSMakeRange((textView.text as NSString).length - 1, 1);
+        textView.scrollRangeToVisible(range)
     }
     
     
@@ -72,6 +77,11 @@ class ViewController: UIViewController {
     
     @IBAction func tappedEraseButton (_sender: UIButton) {
         calcul.delete()
+        display()
+    }
+    
+    @IBAction func tappedPointButton (_ sender: UIButton) {
+        calcul.addAPoint()
         display()
     }
     
