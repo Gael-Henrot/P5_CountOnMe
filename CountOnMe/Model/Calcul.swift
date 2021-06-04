@@ -59,10 +59,8 @@ class Calcul {
         
         // Checks if the last element is a number.
         let last = elementsToDisplay.suffix(1)
-        for i in numbers {
-            if last == i {
+        for i in numbers where last == i {
                 isANumber = true
-            }
         }
         return isANumber
     }
