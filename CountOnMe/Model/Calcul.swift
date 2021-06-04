@@ -28,7 +28,7 @@ class Calcul {
     }
     
     private var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "x" && elements.last != "/"
+        return elements.last != "+" && elements.last != "-" && elements.last != "x" && elements.last != "/" && !elements.isEmpty
     }
     
     private var expressionHaveResult: Bool {
@@ -108,7 +108,7 @@ class Calcul {
         if canAddOperator {
             elementsToDisplay.append(" " + operatorAsString + " ")
         } else {
-            throw ErrorType.operandAlreadyChoosed
+            throw ErrorType.cantAddAnOperator
         }
     }
     
@@ -239,6 +239,6 @@ class Calcul {
     
     /// This enumeration lists all the type of errors.
     enum ErrorType: Error {
-        case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong, divideByZero, unknownOperator, cantAddAPoint
+        case cantAddAnOperator, expressionNotCorrect, expressionNotEnoughtLong, divideByZero, unknownOperator, cantAddAPoint
     }    
 }

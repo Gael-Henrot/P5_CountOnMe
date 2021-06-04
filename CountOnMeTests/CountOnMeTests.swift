@@ -111,34 +111,42 @@ class CalculTests: XCTestCase {
 //====================================================================
 //    MARK: Error Notification Tests
     
-    func testGiven1PlusIsDisplay_WhenPlusIsChoosed_ThenTheErrorExpressionNotCorrectIsSend() throws {
+    func testGivenNothingIsDisplay_WhenThePlusIsChoosed_ThenTheErrorCantAddAnOperatorIsDisplay() throws {
+        setDisplay("")
+        XCTAssertThrowsError(try calcul.addAPlus(), "The calculation can not begin with an operator.", { error in
+            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAnOperator)
+        })
+        XCTAssertEqual(calcul.elementsToDisplay, "")
+    }
+    
+    func testGiven1PlusIsDisplay_WhenPlusIsChoosed_ThenTheErrorCantAddAnOperatorIsSend() throws {
         setDisplay("1 + ")
         XCTAssertThrowsError(try calcul.addAPlus(), "The calculation can not have two operators in a row.", { error in
-            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.operandAlreadyChoosed)
+            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAnOperator)
         })
         XCTAssertEqual(calcul.elementsToDisplay, "1 + ")
     }
     
-    func testGiven1MinusIsDisplay_WhenMinusIsChoosed_ThenTheErrorExpressionNotCorrectIsSend() throws {
+    func testGiven1MinusIsDisplay_WhenMinusIsChoosed_ThenTheErrorCantAddAnOperatorIsSend() throws {
         setDisplay("1 - ")
         XCTAssertThrowsError(try calcul.addAMinus(), "The calculation can not have two operators in a row.", { error in
-            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.operandAlreadyChoosed)
+            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAnOperator)
         })
         XCTAssertEqual(calcul.elementsToDisplay, "1 - ")
     }
     
-    func testGiven1MultiplyIsDisplay_WhenMultiplyIsChoosed_ThenTheErrorExpressionNotCorrectIsSend() throws {
+    func testGiven1MultiplyIsDisplay_WhenMultiplyIsChoosed_ThenTheErrorCantAddAnOperatorIsSend() throws {
         setDisplay("1 x ")
         XCTAssertThrowsError(try calcul.addAMultiply(), "The calculation can not have two operators in a row.", { error in
-            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.operandAlreadyChoosed)
+            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAnOperator)
         })
         XCTAssertEqual(calcul.elementsToDisplay, "1 x ")
     }
     
-    func testGiven1DivideIsDisplay_WhenDivideIsChoosed_ThenTheErrorExpressionNotCorrectIsSend() throws {
+    func testGiven1DivideIsDisplay_WhenDivideIsChoosed_ThenTheErrorCantAddAnOperatorIsSend() throws {
         setDisplay("1 / ")
         XCTAssertThrowsError(try calcul.addADivide(), "The calculation can not have two operators in a row.", { error in
-            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.operandAlreadyChoosed)
+            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAnOperator)
         })
         XCTAssertEqual(calcul.elementsToDisplay, "1 / ")
     }

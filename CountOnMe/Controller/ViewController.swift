@@ -43,8 +43,8 @@ class ViewController: UIViewController {
         do {
             try calcul.addAPlus()
             display()
-        } catch Calcul.ErrorType.operandAlreadyChoosed {
-            operandAlreadyChoosedError()
+        } catch Calcul.ErrorType.cantAddAnOperator {
+            cantAddAnOperatorError()
         } catch {
             
         }
@@ -54,8 +54,8 @@ class ViewController: UIViewController {
         do {
             try calcul.addAMinus()
             display()
-        } catch Calcul.ErrorType.operandAlreadyChoosed {
-            operandAlreadyChoosedError()
+        } catch Calcul.ErrorType.cantAddAnOperator {
+            cantAddAnOperatorError()
         } catch {
             
         }
@@ -83,8 +83,8 @@ class ViewController: UIViewController {
         do {
             try calcul.addAMultiply()
             display()
-        } catch Calcul.ErrorType.operandAlreadyChoosed {
-            operandAlreadyChoosedError()
+        } catch Calcul.ErrorType.cantAddAnOperator {
+            cantAddAnOperatorError()
         } catch {
             
         }
@@ -94,8 +94,8 @@ class ViewController: UIViewController {
         do {
             try calcul.addADivide()
             display()
-        } catch Calcul.ErrorType.operandAlreadyChoosed {
-            operandAlreadyChoosedError()
+        } catch Calcul.ErrorType.cantAddAnOperator {
+            cantAddAnOperatorError()
         } catch {
             
         }
@@ -132,8 +132,8 @@ class ViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    func operandAlreadyChoosedError() {
-        showError(title: "Nope!", message: "Un opérateur est déjà sélectionné !")
+    func cantAddAnOperatorError() {
+        showError(title: "Nope!", message: "Impossible d'ajouter un opérateur !")
     }
     
     func expressionNotCorrectError() {
