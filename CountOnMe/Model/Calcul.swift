@@ -99,7 +99,7 @@ class Calcul {
     }
     
     /// This method adds an operator to the current calculation. If there is already a calculation, it keeps the result.
-    private func addAnOperator(operatorAsString: String) {
+    private func addAnOperator(operatorAsString: String) throws {
         
         // Keeps the result of last calculation.
         if expressionHaveResult {
@@ -108,35 +108,34 @@ class Calcul {
         if canAddOperator {
             elementsToDisplay.append(" " + operatorAsString + " ")
         } else {
-            errorDone(.operandAlreadyChoosed)
+            throw ErrorType.operandAlreadyChoosed
         }
     }
     
     /// This method adds a plus sign to the current calculation.
-    func addAPlus() {
-        addAnOperator(operatorAsString: "+")
+    func addAPlus() throws {
+            try addAnOperator(operatorAsString: "+")
     }
     
     /// This method adds a minus sign to the current calculation.
-    func addAMinus() {
-        addAnOperator(operatorAsString: "-")
+    func addAMinus() throws {
+            try addAnOperator(operatorAsString: "-")
     }
     
     /// This method adds a multiply sign to the current calculation.
-    func addAMultiply() {
-        addAnOperator(operatorAsString: "x")
+    func addAMultiply() throws {
+            try addAnOperator(operatorAsString: "x")
     }
     
     /// This method adds a divide sign to the current calculation.
-    func addADivide() {
-        addAnOperator(operatorAsString: "/")
+    func addADivide() throws {
+            try addAnOperator(operatorAsString: "/")
     }
     
     /// This method add a point (decimal).
-    func addAPoint() {
+    func addAPoint() throws {
        guard canAddAPoint() == true else {
-            errorDone(.expressionNotCorrect)
-            return
+            throw ErrorType.cantAddAPoint
         }
             elementsToDisplay.append(".")
     }
@@ -144,11 +143,10 @@ class Calcul {
     // MARK: 'Modify the calculation' methods
     
     /// This method deletes the last element of the current calculation.
-    func delete() {
+    func delete() throws {
         
         guard canDelete else {
-            errorDone(.expressionNotEnoughtLong)
-            return
+            throw ErrorType.expressionNotEnoughtLong
         }
         
         if elementsToDisplay.last != " " && elementsToDisplay != "" {
@@ -172,24 +170,21 @@ class Calcul {
     }
     
     /// This function realizes the calculation.
-    func calculate() {
+    func calculate() throws {
         
         // Checks if the calculation is not already done.
         guard expressionHaveResult == false else {
-            errorDone(.expressionNotCorrect)
-            return
+            throw ErrorType.expressionNotCorrect
         }
         
         // Checks if the calculation is correct (not finishes by an operator).
         guard expressionIsCorrect else {
-            errorDone(.expressionNotCorrect)
-            return
+            throw ErrorType.expressionNotCorrect
         }
         
         // Checks if the calculation has enought elements.
         guard expressionHaveEnoughElement else {
-            errorDone(.expressionNotEnoughtLong)
-            return
+            throw ErrorType.expressionNotEnoughtLong
         }
         
         // Creates local copy of operations
@@ -226,10 +221,9 @@ class Calcul {
             case "/": result = left / right
                 // Forbids the user ti divide by 0.
                 guard right != 0 else {
-                    errorDone(.divideByZero)
-                    return
+                    throw ErrorType.divideByZero
                 }
-            default: fatalError("Unknown operator !")
+            default: throw ErrorType.unknownOperator
             }
             // Removes the calculation just done and put the result.
             operationsToReduce.removeSubrange(rangeToRemove)
@@ -243,27 +237,8 @@ class Calcul {
         }
     }
     
-    private enum ErrorType {
-        case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong, divideByZero
-    }
-    
-    /// Creates the right error notification according to the error situation.
-    private func errorDone(_ errorType: ErrorType) {
-        var errorName: String = ""
-        switch errorType {
-        case .expressionNotCorrect:
-            errorName = "expressionNotCorrect"
-        case .expressionNotEnoughtLong:
-            errorName = "expressionNotEnoughtLong"
-        case .operandAlreadyChoosed:
-            errorName = "operandAlreadyChoosed"
-        case .divideByZero:
-            errorName = "divideByZero"
-        }
-        let errorNotificationName = Notification.Name(errorName)
-        let errorNotification = Notification(name: errorNotificationName)
-        NotificationCenter.default.post(errorNotification)
-    }
-    
-    
+    /// This enumeration lists all the type of errors.
+    enum ErrorType: Error {
+        case operandAlreadyChoosed, expressionNotCorrect, expressionNotEnoughtLong, divideByZero, unknownOperator, cantAddAPoint
+    }    
 }

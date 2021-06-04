@@ -15,20 +15,6 @@ class ViewController: UIViewController {
     
     let calcul = Calcul()
     
-    // View Life cycles
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Notifications for errors
-        let errorExpressionNotCorrectName = Notification.Name("expressionNotCorrect")
-        NotificationCenter.default.addObserver(self, selector: #selector(showErrorExpressionNotCorrect), name: errorExpressionNotCorrectName, object: nil)
-        let errorExpressionNotEnoughtLongName = Notification.Name("expressionNotEnoughtLong")
-        NotificationCenter.default.addObserver(self, selector: #selector(showErrorExpressionNotEnoughtLong), name: errorExpressionNotEnoughtLongName, object: nil)
-        let errorOperandAlreadyChoosedName = Notification.Name("operandAlreadyChoosed")
-        NotificationCenter.default.addObserver(self, selector: #selector(showErrorOperandAlreadyChoosed), name: errorOperandAlreadyChoosedName, object: nil)
-        let errorDivideByZeroName = Notification.Name("divideByZero")
-        NotificationCenter.default.addObserver(self, selector: #selector(showErrorDivideByZero), name: errorDivideByZeroName, object: nil)
-    }
-    
     ///This method displays the elements of calculation in the textView.
     ///It is used each time a number or an operand is added to the calculation.
     ///It also scrolls to the bottom if the calculation is too long.
@@ -40,8 +26,11 @@ class ViewController: UIViewController {
         textView.scrollRangeToVisible(range)
     }
     
+//==============================================================
+// MARK: Tapped Buttons
+// All methods call the corresponding method in Calcul class.
+// It displays the good Error AlertController according to the possible error.
     
-    // View actions
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal) else {
             return
@@ -51,66 +40,120 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tappedAdditionButton(_ sender: UIButton) {
-        calcul.addAPlus()
-        display()
+        do {
+            try calcul.addAPlus()
+            display()
+        } catch Calcul.ErrorType.operandAlreadyChoosed {
+            operandAlreadyChoosedError()
+        } catch {
+            
+        }
     }
     
     @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-        calcul.addAMinus()
-        display()
+        do {
+            try calcul.addAMinus()
+            display()
+        } catch Calcul.ErrorType.operandAlreadyChoosed {
+            operandAlreadyChoosedError()
+        } catch {
+            
+        }
     }
 
     @IBAction func tappedEqualButton(_ sender: UIButton) {
-        calcul.calculate()
-        display()
+        do {
+            try calcul.calculate()
+            display()
+        } catch Calcul.ErrorType.expressionNotCorrect {
+            expressionNotCorrectError()
+        } catch Calcul.ErrorType.expressionNotEnoughtLong {
+            expressionNotEnoughtLongError()
+        } catch Calcul.ErrorType.divideByZero {
+            divideByZeroError()
+        } catch Calcul.ErrorType.unknownOperator {
+            unknownOperatorError()
+        } catch {
+            
+        }
+        
     }
     
     @IBAction func tappedMultiplyButton(_ sender: UIButton) {
-        calcul.addAMultiply()
-        display()
+        do {
+            try calcul.addAMultiply()
+            display()
+        } catch Calcul.ErrorType.operandAlreadyChoosed {
+            operandAlreadyChoosedError()
+        } catch {
+            
+        }
     }
     
     @IBAction func tappedDivideButton(_ sender: UIButton) {
-        calcul.addADivide()
-        display()
+        do {
+            try calcul.addADivide()
+            display()
+        } catch Calcul.ErrorType.operandAlreadyChoosed {
+            operandAlreadyChoosedError()
+        } catch {
+            
+        }
     }
     
     @IBAction func tappedEraseButton (_sender: UIButton) {
-        calcul.delete()
-        display()
+        do {
+            try calcul.delete()
+            display()
+        } catch Calcul.ErrorType.expressionNotEnoughtLong {
+            expressionNotEnoughtLongError()
+        } catch {
+            
+        }
     }
     
     @IBAction func tappedPointButton (_ sender: UIButton) {
-        calcul.addAPoint()
-        display()
-    }
-    
-    ///This method shows an alert when an expression is not correct (expression ends with an operand).
-    @objc private func showErrorExpressionNotCorrect() {
-        let alertVC = UIAlertController(title: "Nope!", message: "Entrez une expression correcte !", preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        self.present(alertVC, animated: true, completion: nil)
+        do {
+            try calcul.addAPoint()
+            display()
+        } catch Calcul.ErrorType.cantAddAPoint {
+            cantAddAPointError()
+        } catch {
+            
+        }
     }
 
-    ///This method shows an alert when an expression is not long enought (3 elements minimum).
-    @objc private func showErrorExpressionNotEnoughtLong() {
-        let alertVC = UIAlertController(title: "Allez!", message: "Démarrez un nouveau calcul !", preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        self.present(alertVC, animated: true, completion: nil)
+//==============================================================
+// MARK: Error AlertControllers
+    
+    func showError(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    ///This method shows an alert when an operand is already choosed.
-    @objc private func showErrorOperandAlreadyChoosed() {
-        let alertVC = UIAlertController(title: "Nope!", message: "Un operateur est déjà mis !", preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        self.present(alertVC, animated: true, completion: nil)
+    func operandAlreadyChoosedError() {
+        showError(title: "Nope!", message: "Un opérateur est déjà sélectionné !")
     }
     
-    ///This method shows an alert when the user try to divide by 0.
-    @objc private func showErrorDivideByZero() {
-        let alertVC = UIAlertController(title: "Zéro!", message: "Division par zéro impossible !", preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        self.present(alertVC, animated: true, completion: nil)
+    func expressionNotCorrectError() {
+        showError(title: "Nope!", message: "Entrez une expression correcte !")
+    }
+    
+    func expressionNotEnoughtLongError() {
+        showError(title: "Go!", message: "Démarrez un nouveau calcul !")
+    }
+    
+    func divideByZeroError() {
+        showError(title: "Zéro!", message: "Division par zéro impossible !")
+    }
+    
+    func unknownOperatorError() {
+        showError(title: "Nope!", message: "Opérateur inconnu !")
+    }
+    
+    func cantAddAPointError() {
+        showError(title: "Nope!", message: "Impossible d'ajouter une virgule!")
     }
 }
 
