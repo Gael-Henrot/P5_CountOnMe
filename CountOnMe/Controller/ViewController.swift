@@ -126,33 +126,33 @@ class ViewController: UIViewController {
 //==============================================================
 // MARK: Error AlertControllers
     
-    func showError(title: String, message: String) {
+    private func showError(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
-    func cantAddAnOperatorError() {
+    private func cantAddAnOperatorError() {
         showError(title: "Nope!", message: "Impossible d'ajouter un opérateur !")
     }
     
-    func expressionNotCorrectError() {
+    private func expressionNotCorrectError() {
         showError(title: "Nope!", message: "Entrez une expression correcte !")
     }
     
-    func expressionNotEnoughtLongError() {
+    private func expressionNotEnoughtLongError() {
         showError(title: "Go!", message: "Démarrez un nouveau calcul !")
     }
     
-    func divideByZeroError() {
+    private func divideByZeroError() {
         showError(title: "Zéro!", message: "Division par zéro impossible !")
     }
     
-    func unknownOperatorError() {
+    private func unknownOperatorError() {
         showError(title: "Nope!", message: "Opérateur inconnu !")
     }
     
-    func cantAddAPointError() {
+    private func cantAddAPointError() {
         showError(title: "Nope!", message: "Impossible d'ajouter une virgule!")
     }
 }
