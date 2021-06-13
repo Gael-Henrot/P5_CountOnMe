@@ -16,9 +16,6 @@ class CalculTests: XCTestCase {
         calcul = Calcul()
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
 //====================================================================
 //    MARK: Test methods
     
@@ -252,6 +249,14 @@ class CalculTests: XCTestCase {
             XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAPoint)
         })
         XCTAssertEqual(calcul.elementsToDisplay, "10 + 10 = 20")
+    }
+    
+    func testGiven1PointIsDisplay_WhenPlusIsChoosed_ThenTheErrorCantAddAnOperatorIsSend() throws {
+        setDisplay("1.")
+        XCTAssertThrowsError(try calcul.addAPlus(), "The calculation can not have an operator after a point.", { error in
+            XCTAssertEqual(error as? Calcul.ErrorType, Calcul.ErrorType.cantAddAnOperator)
+        })
+        XCTAssertEqual(calcul.elementsToDisplay, "1.")
     }
     
 }

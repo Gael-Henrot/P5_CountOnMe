@@ -28,7 +28,7 @@ class Calcul {
     }
     
     private var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "x" && elements.last != "/" && !elements.isEmpty
+        return elements.last != "+" && elements.last != "-" && elements.last != "x" && elements.last != "/" && !elements.isEmpty && elementsToDisplay.last != "."
     }
     
     private var expressionHaveResult: Bool {
@@ -217,7 +217,7 @@ class Calcul {
             case "-": result = left - right
             case "x": result = left * right
             case "/": result = left / right
-                // Forbids the user ti divide by 0.
+                // Forbids the user to divide by 0.
                 guard right != 0 else {
                     throw ErrorType.divideByZero
                 }
